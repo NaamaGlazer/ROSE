@@ -8,7 +8,7 @@ driver_name = "No Driver"
 
 hard_obstacles = set([obstacles.BIKE, obstacles.BARRIER, obstacles.TRASH])
 
-def obstacles(car_pose_X, car_pose_Y,world):
+def obstacles_(car_pose_X, car_pose_Y,world):
     if world.get((car_pose_X,car_pose_Y-1)) == obstacles.BARRIER or obstacles.BIKE or obstacles.TRASH:
         if world.get((car_pose_X-1, car_pose_Y)) == obstacles.BARRIER or obstacles.BIKE or obstacles.TRASH:
             return actions.RIGHT
@@ -22,7 +22,7 @@ def drive(world):
     car_x = world.car.x
     car_y = world.car.y
     soft_obstacle_action = handle_soft_obstacles(world, car_x, car_y)
-    obstacles_action = obstacles(car_x,car_y,world)
+    obstacles_action = obstacles_(car_x,car_y,world)
     if obstacles_action:
         return obstacles_action
     if soft_obstacle_action:
