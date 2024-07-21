@@ -8,6 +8,14 @@ driver_name = "No Driver"
 
 hard_obstacles = set([obstacles.BIKE, obstacles.BARRIER, obstacles.TRASH])
 
+def obstacles(car_pose_X, car_pose_Y):
+    if world.get((car_pose_X,car_pose_Y-1)) == obstacles.BARRIER or obstacles.BIKE or obstacles.TRASH:
+        if world.get((car_pose_X-1, car_pose_Y)) == obstacles.BARRIER or obstacles.BIKE or obstacles.TRASH:
+            car_pose_X += 1
+        elif world.get((car_pose_X+1, car_pose_Y)) == obstacles.BARRIER or obstacles.BIKE or obstacles.TRASH:
+            car_pose_X -= 1
+
+
 
 def drive(world):
     car_x = world.car.x
