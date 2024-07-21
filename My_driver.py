@@ -18,6 +18,7 @@ def obstacles(car_pose_X, car_pose_Y,world):
 
 
 def drive(world):
+    print("hi")
     car_x = world.car.x
     car_y = world.car.y
     soft_obstacle_action = handle_soft_obstacles(world, car_x, car_y)
