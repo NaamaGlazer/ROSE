@@ -1,42 +1,53 @@
-"""
-This driver does not do any action.
-"""
-
 from rose.common import obstacles, actions  # NOQA
 
-driver_name = "No Driver"
+driver_name = "Lane Switcher"
 
-hard_obstacles = set([obstacles.BIKE, obstacles.BARRIER, obstacles.TRASH])
+# Define the hard obstacles
+hard_obstacles = {obstacles.BIKE, obstacles.BARRIER, obstacles.TRASH}
 
-def obstacles_(car_pose_X, car_pose_Y,world):
-    if world.get((car_pose_X,car_pose_Y-1)) == obstacles.BARRIER or obstacles.BIKE or obstacles.TRASH:
-        if world.get((car_pose_X-1, car_pose_Y)) == obstacles.BARRIER or obstacles.BIKE or obstacles.TRASH:
-            return actions.RIGHT
-        elif world.get((car_pose_X+1, car_pose_Y)) == obstacles.BARRIER or obstacles.BIKE or obstacles.TRASH:
-            return actions.LEFT
-
-
-
-def drive(world):
-    print("hi")
-    car_x = world.car.x
-    car_y = world.car.y
-    soft_obstacle_action = handle_soft_obstacles(world, car_x, car_y)
-    obstacles_action = obstacles_(car_x,car_y,world)
-    if obstacles_action:
-        return obstacles_action
-    if soft_obstacle_action:
-        return soft_obstacle_action
+def obstacles_(car_x, car_y, world):
+    try:
+        # Check for hard obstacles in front of the car
+        if world.get((car_x, car_y - 1)) in hard_obstacles:
+            # If the car is in the leftmost lane, move right
+            if car_x == 0:
+                return actions.RIGHT
+            # If the car is in the rightmost lane, move left
+            elif car_x == 2:
+                return actions.LEFT
+            # If the car is in the middle lane, prefer to move right
+            else:
+                return actions.RIGHT
+    except IndexError:
+        # Handle out of bounds
+        return actions.NONE
     return actions.NONE
 
+def drive(world):
+    car_x = world.car.x
+    car_y = world.car.y
+
+    # Handle lane switching for hard obstacles
+    lane_switch_action = obstacles_(car_x, car_y, world)
+    if lane_switch_action != actions.NONE:
+        return lane_switch_action
+
+    # Handle soft obstacles
+    soft_obstacle_action = handle_soft_obstacles(world, car_x, car_y)
+    if soft_obstacle_action:
+        return soft_obstacle_action
+
+    return actions.NONE
 
 def handle_soft_obstacles(world, car_x, car_y):
-    match world.get((car_x, car_y)):
-        case obstacles.WATER:
+    try:
+        obstacle = world.get((car_x, car_y - 1))
+        if obstacle == obstacles.WATER:
             return actions.BRAKE
-        case obstacles.CRACK:
+        elif obstacle == obstacles.CRACK:
             return actions.JUMP
-        case obstacles.PENGUIN:
+        elif obstacle == obstacles.PENGUIN:
             return actions.PICKUP
-        case _:
-            return False
+    except IndexError:
+        return actions.NONE
+    return False
