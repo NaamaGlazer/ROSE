@@ -12,9 +12,9 @@ def drive(world):
     print("pos =", (x, y))
     print("standing on", world.get((x, y)))
     print(f"view:\n{(
-        world.get((x - (1 if x > 0 else 0), y-1)),
+        world.get((x - (1 if x % 3 > 0 else 0), y-1)),
         world.get((x, y-1)),
-        world.get((x + (1 if x < 5 else 0), y-1))
+        world.get((x + (1 if x % 3 < 2 else 0), y-1))
     )}")
 
     # handle soft obstacle
@@ -25,8 +25,8 @@ def drive(world):
 
     # get 3 possible routs
     none = get_best_rout(world, x, y - 1, actions.NONE)
-    right = get_best_rout(world, x + (1 if x < 5 else 0), y - 1, actions.RIGHT)
-    left = get_best_rout(world, x - (1 if x > 0 else 0), y - 1, actions.LEFT)
+    right = get_best_rout(world, x + (1 if x % 3 < 2 else 0), y - 1, actions.RIGHT)
+    left = get_best_rout(world, x - (1 if x % 3 > 0 else 0), y - 1, actions.LEFT)
     print(f"{left=}\n{right=}\n{none=}")  # debug info
 
     # chose the one that gives most points
@@ -90,7 +90,7 @@ def get_best_rout(world, x, y, action, depth=0):
             rout, score = left
             left = (rout, score - 10 - obstacle_score)
     # check right rout
-    if x < 5:
+    if x % 3 < 2:
         right = get_best_rout(world, x + 1, y - 1, actions.RIGHT, depth + 1)
         # points go down if moving and landing an obstacle
         # so we do this to prevent it
