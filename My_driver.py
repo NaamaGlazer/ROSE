@@ -37,7 +37,6 @@ def drive(world):
     print(f"doing '{best[0][0]}'")
     print(f"next is {best[0][1]}")
     print("\n\n")
-
     # return the wanted action
     return best[0][0]
 
