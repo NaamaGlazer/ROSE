@@ -8,7 +8,8 @@ web_port = 8880
 # Server
 
 game_rate = 1.0
-game_duration = 60
+# changed game duraiton from 60 to 120
+game_duration = 120
 number_of_cars = 4
 is_track_random = True
 
@@ -39,9 +40,14 @@ cells_per_player = matrix_width // max_players
 
 score_move_forward = 10
 score_move_backward = -10
+score_hit_cement_barier = -10
+score_pickup_cement_pack = 0
 score_pickup = 10
 score_jump = 5
 score_brake = 4
+
+# percentage of chance to generate cement_pack
+
 
 # Logging
 

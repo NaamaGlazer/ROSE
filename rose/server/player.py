@@ -22,6 +22,11 @@ class Player(object):
                 react. Starts as None.
             score (int, optional): The driver's current score. Begins at 0.
         """
+
+        # penguins_collected (int, optional): the number of penguins
+        #     collected. starts as 0.
+        # golden_rush (bool): did the player connect golden player,
+        #     and is in golden rush. defaults to False
         self.name = name
         self.car = car
         self.lane = lane
@@ -30,6 +35,8 @@ class Player(object):
         self.action = None
         self.response_time = None
         self.score = None
+        # self.penguins_collected = None
+        # self.golden_rush = False
         self.reset()
 
     # Game state interface
@@ -43,6 +50,8 @@ class Player(object):
         self.action = actions.NONE
         self.response_time = None
         self.score = 0
+        # self.penguins_collected = 0
+        # self.golden_rush = False
 
     def in_lane(self):
         current_lane = self.x // config.cells_per_player

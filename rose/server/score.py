@@ -1,4 +1,5 @@
-""" Score logic """
+"""Score logic"""
+
 import logging
 
 from rose.common import actions, config, obstacles
@@ -134,10 +135,37 @@ def process(players, track):
                     obstacle,
                     points,
                 )
+                # player.penguins_collected += 1
             else:
                 # Move forward leaving the obstacle on the track
                 player.score += config.score_move_forward
                 log.debug("player %s missed %s", player.name, obstacle)
+
+        elif obstacle == obstacles.CEMENT_WALL:
+            if player.action == actions.PICKUP_CEMENT_PACK:
+                # Move forward and collect the cement pack
+                track.clear(player.x, player.y)
+                points = config.score_move_forward + config.score_pickup_cement_pack
+                player.score += points
+                # generate cement barier on opponents side
+                log.debug(
+                    "player %s picked up %s: got %d points, and generated obstacles on opponents side",
+                    player.name,
+                    obstacle,
+                    points,
+                )
+            else:
+                player.score += config.score_move_forward
+                log.debug("player %s missed %s", player.name, obstacle)
+
+        # elif obstacle == obstacles.GOLDEN_PENGUIN:
+        #     if player.action == actions.PICKUP:
+        #         if player.penguins_collected >= 6:
+        #             player.golden_rush = True
+        #             track.fill_with_penguins()
+        #     else:
+        #         player.score += config.score_move_forward
+        #         log.debug("player %s missed %s", player.name, obstacle)
 
         # Here we can end the game when player gets out of
         # the track bounds. For now, just keep the player at the same
@@ -179,4 +207,6 @@ def process(players, track):
             player.y,
             player.score,
             player.response_time,
+            # player.pengiuns_collected,
+            # player.golden_rush,
         )
